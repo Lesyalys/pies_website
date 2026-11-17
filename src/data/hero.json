@@ -1,0 +1,32 @@
+{
+  "slides": [
+    {
+      "id": 1,
+      "titleFirst": "Пироги",
+      "titleSecond": "с вишней",
+      "mainImage": "./pais/sweet.webp",
+      "buttonText": "Выбрать пирог"
+    },
+    {
+      "id": 2,
+      "titleFirst": "Дарим",
+      "titleSecond": "подарки и скидки",
+      "mainImage": "./pais/sweet.webp",
+      "buttonText": "Узнать подробнее"
+    },
+    {
+      "id": 3,
+      "titleFirst": "Пироги",
+      "titleSecond": "с клубникой",
+      "mainImage": "./pais/sweet.webp",
+      "buttonText": "Выбрать пирог"
+    },
+    {
+      "id": 4,
+      "titleFirst": "Осеннее",
+      "titleSecond": "меню",
+      "mainImage": "./pais/sweet.webp",
+      "buttonText": "Смотреть меню"
+    }
+  ]
+}
