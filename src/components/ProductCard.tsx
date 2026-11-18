@@ -46,7 +46,7 @@ export const ProductCard = ({ pie, sizes }: Props) => {
             ))}
           </select>
         </div>
-        {isStopped && <span className="product-card__stop-text">В СТОП</span>}
+        {isStopped && <span className="product-card__stop-text">Временно не готовяться</span>}
       </div>
 
       {/* Изображение */}
