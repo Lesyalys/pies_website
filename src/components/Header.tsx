@@ -12,7 +12,7 @@ export const Header = () => {
             alt="Логотип Пироговая"
             className="header__logo-img"
           />
-          <span>Пироговая.</span>
+          <span>Домашние пироги</span>
         </a>
 
         <div className="header__info">

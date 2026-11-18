@@ -3,7 +3,7 @@ export const Footer = () => (
     <div className="container">
       <div className="footer__top">
         <div className="footer__brand">
-          <div className="footer__logo">Пироговая.</div>
+          <div className="footer__logo">Домашние пироги</div>
           <p className="footer__desc">
             Домашние пироги ручной работы с доставкой по Москве и ближайшему
             Подмосковью.
