@@ -3,12 +3,14 @@ import { useCart } from "../context/CartContext";
 import { SETTINGS } from "../config/settings";
 import { AddressInput } from "./AddressInput";
 import type { AddressData } from "./AddressInput";
-import { validatePickupTime, validateDeliveryTime } from "../utils/time";
 import {
   getAvailableDates,
   getDeliveryTimeIntervals,
-  PICKUP_START,
-  PICKUP_END,
+  getPickupTimeIntervals,
+  validatePickupTime,
+  validateDeliveryTime,
+  canOrderToday,
+  ORDER_CUTOFF_HOUR,
 } from "../utils/time";
 
 interface Props {
@@ -20,6 +22,7 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
   const { cart, totalPrice, closeCart } = useCart();
 
   const availableDates = useMemo(() => getAvailableDates(), []);
+  const isTodayAvailable = useMemo(() => canOrderToday(), []);
 
   const [deliveryType, setDeliveryType] = useState<"delivery" | "pickup">("delivery");
   const [selectedDate, setSelectedDate] = useState(availableDates[0]?.value || "");
@@ -37,15 +40,20 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     intercomCode: "",
   });
 
-  // Какие поля "трогали" (чтобы не показывать ошибки до взаимодействия)
   const [touched, setTouched] = useState({
     phone: false,
     address: false,
     time: false,
   });
 
+  // Отдельные интервалы для доставки и самовывоза
   const deliveryIntervals = useMemo(
     () => getDeliveryTimeIntervals(selectedDate),
+    [selectedDate]
+  );
+
+  const pickupIntervals = useMemo(
+    () => getPickupTimeIntervals(selectedDate),
     [selectedDate]
   );
 
@@ -74,9 +82,7 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     deliveryType === "pickup" ? Math.round(totalPrice * SETTINGS.pickupDiscount) : 0;
   const finalPrice = totalPrice + deliveryCost - pickupDiscount;
 
-  // ---- ВАЛИДАЦИЯ КАЖДОГО ПОЛЯ ----
-  const phoneDigits = phone.replace(/\D/g, "").length;
-  const isPhoneValid = phoneDigits === 11;
+  const isPhoneValid = phone.replace(/\D/g, "").length === 11;
 
   const isAddressValid =
     deliveryType === "delivery"
@@ -97,6 +103,14 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           ×
         </button>
         <h2 className="checkout-modal__title">Оформление заказа</h2>
+
+        {/* Уведомление о дедлайне */}
+        {!isTodayAvailable && (
+          <div className="deadline-notice">
+            ⏰ Заказы на сегодня принимаются до {ORDER_CUTOFF_HOUR}:00. Ближайшая
+            доступная дата — завтра.
+          </div>
+        )}
 
         {/* 1. Способ получения */}
         <div className="checkout-field">
@@ -170,16 +184,16 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
         {/* 4. Время самовывоза */}
         {deliveryType === "pickup" && (
           <div className="checkout-field">
-            <label className="checkout-label">Время самовывоза</label>
-            {deliveryIntervals.length > 0 ? (
+            <label className="checkout-label">Время самовывоза (с 8:00 до 20:00)</label>
+            {pickupIntervals.length > 0 ? (
               <div className="time-grid">
-                {deliveryIntervals.map((t) => (
+                {pickupIntervals.map((t) => (
                   <button
                     key={t}
                     type="button"
-                    className={`time-grid__btn ${deliveryTime === t ? "active" : ""}`}
+                    className={`time-grid__btn ${pickupTime === t ? "active" : ""}`}
                     onClick={() => {
-                      setDeliveryTime(t);
+                      setPickupTime(t);
                       setTouched((prev) => ({ ...prev, time: true }));
                     }}
                   >
@@ -191,6 +205,9 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
               <div className="address-checker__error">
                 На эту дату нет доступных интервалов. Выберите другой день.
               </div>
+            )}
+            {touched.time && !pickupTime && (
+              <span className="field-error">Выберите интервал самовывоза</span>
             )}
           </div>
         )}
@@ -207,9 +224,7 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
             onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
           />
           {touched.phone && !isPhoneValid && (
-            <span className="field-error">
-              Введите номер полностью (11 цифр)
-            </span>
+            <span className="field-error">Введите номер полностью (11 цифр)</span>
           )}
         </div>
 

@@ -20,6 +20,7 @@ export interface Pie {
   stop_start: string | null;
   stop_end: string | null;
   stop_reason: string | null;
+  decore: string[];
 }
 
 export interface MenuData {

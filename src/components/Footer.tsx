@@ -5,8 +5,7 @@ export const Footer = () => (
         <div className="footer__brand">
           <div className="footer__logo">Домашние пироги</div>
           <p className="footer__desc">
-            Домашние пироги ручной работы с доставкой по Москве и ближайшему
-            Подмосковью.
+            Домашние пироги ручной работы с доставкой по Сургуту
           </p>
         </div>
 
@@ -20,13 +19,13 @@ export const Footer = () => (
 
         <div>
           <div className="footer__col-label">Режим работы</div>
-          <div className="footer__schedule">Ежедневно, 09:00–21:00</div>
-          <div className="footer__schedule-muted">Заказы до 19:00</div>
+          <div className="footer__schedule">Ежедневно, 09:00–20:00</div>
+          <div className="footer__schedule-muted">Работа кухни до 18:00</div>
         </div>
       </div>
 
       <div className="footer__bottom">
-        <div>© 2025 Пироговая. Все права защищены.</div>
+        <div>© 2026 Домашние пироги<br /> Все права защищены.</div>
         <div>Сделано с заботой о семейных вечерах</div>
       </div>
     </div>

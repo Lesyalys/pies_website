@@ -9,6 +9,7 @@ interface Props {
 
 export const ProductCard = ({ pie, sizes }: Props) => {
   const [selectedSize, setSelectedSize] = useState(pie.available_sizes[0]);
+  const [decore, setDecore] = useState(pie.decore[0] || [""])
   const [imageError, setImageError] = useState(false);
   const { addToCart } = useCart(); // Подключаем хук корзины
 
@@ -33,6 +34,7 @@ export const ProductCard = ({ pie, sizes }: Props) => {
       {/* Верхняя панель */}
       <div className="product-card__header">
         <div className="product-card__select-wrap">
+
           <select
             className="product-card__select"
             value={selectedSize}
@@ -45,6 +47,20 @@ export const ProductCard = ({ pie, sizes }: Props) => {
               </option>
             ))}
           </select>
+          {decore && <select className="product-card__select"
+            value={decore}
+            onChange={(e) => setDecore(e.target.value)}
+          >
+            <option value="" disabled hidden>
+              Выберите декор
+            </option>
+            {pie.decore.map((decore) => (
+              <option key={decore} value={decore}>
+                {decore}
+              </option>
+            ))}
+
+          </select>}
         </div>
         {isStopped && <span className="product-card__stop-text">Временно не готовяться</span>}
       </div>

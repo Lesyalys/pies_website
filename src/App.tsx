@@ -14,6 +14,7 @@ import type { MenuData } from "./types/menu";
 import "./styles/components.css";
 import "./styles/App.css";
 
+
 function App() {
   const menuData = menuDataJson as MenuData;
 

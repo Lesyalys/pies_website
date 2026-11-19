@@ -5,5 +5,8 @@ export const SETTINGS = {
   },
   deadlineHour: 18,
   pickupDiscount: 0.10,
-  deliveryPrice: 150, // Фиксированная стоимость доставки
+  deliveryPrice: 150,
+
+  // Активный ивент. Можно брать из env или CMS.
+  eventStyle: "default" | "christmas" | "newyear" | "halloween",
 };
