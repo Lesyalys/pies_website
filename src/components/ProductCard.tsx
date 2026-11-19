@@ -5,11 +5,12 @@ import { useCart } from "../context/CartContext";
 interface Props {
   pie: Pie;
   sizes: Record<string, SizeInfo>;
+  decoreTypes?: Record<string, string>;
 }
 
 export const ProductCard = ({ pie, sizes }: Props) => {
   const [selectedSize, setSelectedSize] = useState(pie.available_sizes[0]);
-  const [decore, setDecore] = useState(pie.decore[0] || [""])
+  const [decore, setDecore] = useState(pie.decore[0])
   const [imageError, setImageError] = useState(false);
   const { addToCart } = useCart(); // Подключаем хук корзины
 
@@ -24,7 +25,7 @@ export const ProductCard = ({ pie, sizes }: Props) => {
   const currentPrice = Math.round(pie.price_per_kg * currentSizeInfo.kg);
 
   const handleAddToCart = () => {
-    addToCart(pie, selectedSize, currentPrice);
+    addToCart(pie, selectedSize, currentPrice, decore);
   };
 
   const showImage = pie.image_url && !imageError;
@@ -51,9 +52,6 @@ export const ProductCard = ({ pie, sizes }: Props) => {
             value={decore}
             onChange={(e) => setDecore(e.target.value)}
           >
-            <option value="" disabled hidden>
-              Выберите декор
-            </option>
             {pie.decore.map((decore) => (
               <option key={decore} value={decore}>
                 {decore}

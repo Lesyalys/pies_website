@@ -15,7 +15,7 @@ interface CartContextType {
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
-  addToCart: (pie: Pie, weight: string, price: number) => void;
+  addToCart: (pie: Pie, weight: string, price: number, decore: string) => void;
   removeFromCart: (id: string, weight: string) => void;
   increaseQuantity: (id: string, weight: string) => void;
   decreaseQuantity: (id: string, weight: string) => void;
