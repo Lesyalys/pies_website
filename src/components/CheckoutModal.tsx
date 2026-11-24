@@ -24,13 +24,18 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
   const availableDates = useMemo(() => getAvailableDates(), []);
   const isTodayAvailable = useMemo(() => canOrderToday(), []);
 
-  const [deliveryType, setDeliveryType] = useState<"delivery" | "pickup">("delivery");
-  const [selectedDate, setSelectedDate] = useState(availableDates[0]?.value || "");
+  const [deliveryType, setDeliveryType] = useState<"delivery" | "pickup">(
+    "delivery",
+  );
+  const [selectedDate, setSelectedDate] = useState(
+    availableDates[0]?.value || "",
+  );
 
   const [phone, setPhone] = useState("+7 ");
   const [deliveryTime, setDeliveryTime] = useState("");
   const [pickupTime, setPickupTime] = useState("");
 
+  // ← добавлено zone: null
   const [addressData, setAddressData] = useState<AddressData>({
     street: "",
     house: "",
@@ -38,6 +43,7 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     entrance: "",
     intercom: "no",
     intercomCode: "",
+    zone: null,
   });
 
   const [touched, setTouched] = useState({
@@ -46,15 +52,14 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     time: false,
   });
 
-  // Отдельные интервалы для доставки и самовывоза
   const deliveryIntervals = useMemo(
     () => getDeliveryTimeIntervals(selectedDate),
-    [selectedDate]
+    [selectedDate],
   );
 
   const pickupIntervals = useMemo(
     () => getPickupTimeIntervals(selectedDate),
-    [selectedDate]
+    [selectedDate],
   );
 
   useEffect(() => {
@@ -77,16 +82,25 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     setTouched((t) => ({ ...t, phone: true }));
   };
 
-  const deliveryCost = deliveryType === "delivery" ? SETTINGS.deliveryPrice : 0;
+  // ← безопасный доступ к zone?.price
+  const deliveryCost =
+    deliveryType === "delivery" && addressData.zone
+      ? addressData.zone.price
+      : 0;
+
   const pickupDiscount =
-    deliveryType === "pickup" ? Math.round(totalPrice * SETTINGS.pickupDiscount) : 0;
+    deliveryType === "pickup"
+      ? Math.round(totalPrice * SETTINGS.pickupDiscount)
+      : 0;
   const finalPrice = totalPrice + deliveryCost - pickupDiscount;
 
   const isPhoneValid = phone.replace(/\D/g, "").length === 11;
 
   const isAddressValid =
     deliveryType === "delivery"
-      ? !!addressData.street.trim() && !!addressData.house.trim()
+      ? !!addressData.street.trim() &&
+        !!addressData.house.trim() &&
+        !!addressData.zone
       : true;
 
   const isTimeValid =
@@ -98,17 +112,20 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <div className="checkout-overlay">
-      <div className="checkout-modal">
-        <button className="checkout-modal__close" onClick={onClose} aria-label="Закрыть">
+      <div className="checkout-modal" onClick={(e) => e.stopPropagation()}>
+        <button
+          className="checkout-modal__close"
+          onClick={onClose}
+          aria-label="Закрыть"
+        >
           ×
         </button>
         <h2 className="checkout-modal__title">Оформление заказа</h2>
 
-        {/* Уведомление о дедлайне */}
         {!isTodayAvailable && (
           <div className="deadline-notice">
-            ⏰ Заказы на сегодня принимаются до {ORDER_CUTOFF_HOUR}:00. Ближайшая
-            доступная дата — завтра.
+            ⏰ Заказы на сегодня принимаются до {ORDER_CUTOFF_HOUR}:00.
+            Ближайшая доступная дата — завтра.
           </div>
         )}
 
@@ -121,7 +138,7 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
               className={`checkout-toggle__btn ${deliveryType === "delivery" ? "active" : ""}`}
               onClick={() => setDeliveryType("delivery")}
             >
-              Доставка ({SETTINGS.deliveryPrice} ₽)
+              Доставка
             </button>
             <button
               type="button"
@@ -184,7 +201,9 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
         {/* 4. Время самовывоза */}
         {deliveryType === "pickup" && (
           <div className="checkout-field">
-            <label className="checkout-label">Время самовывоза (с 8:00 до 20:00)</label>
+            <label className="checkout-label">
+              Время самовывоза (с 8:00 до 20:00)
+            </label>
             {pickupIntervals.length > 0 ? (
               <div className="time-grid">
                 {pickupIntervals.map((t) => (
@@ -224,7 +243,9 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
             onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
           />
           {touched.phone && !isPhoneValid && (
-            <span className="field-error">Введите номер полностью (11 цифр)</span>
+            <span className="field-error">
+              Введите номер полностью (11 цифр)
+            </span>
           )}
         </div>
 
@@ -234,10 +255,9 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
             <label className="checkout-label">Адрес доставки</label>
             <AddressInput onChange={setAddressData} />
             {touched.address && !isAddressValid && (
-              <span className="field-error">Укажите улицу и дом</span>
-            )}
-            {addressData.street && addressData.house && (
-              <span className="field-success">Адрес принят</span>
+              <span className="field-error">
+                Укажите улицу, дом и дождитесь определения зоны
+              </span>
             )}
           </div>
         )}
@@ -262,9 +282,9 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
               <div className="checkout-summary__row">
                 <span>Товары:</span> <span>{totalPrice} ₽</span>
               </div>
-              {deliveryType === "delivery" && (
+              {deliveryType === "delivery" && addressData.zone && (
                 <div className="checkout-summary__row">
-                  <span>Доставка:</span> <span>{SETTINGS.deliveryPrice} ₽</span>
+                  <span>Доставка:</span> <span>{addressData.zone.price} ₽</span>
                 </div>
               )}
               {deliveryType === "pickup" && (
@@ -295,7 +315,8 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
               )}
               {deliveryType === "delivery" && addressData.street && (
                 <p>
-                  <strong>Адрес:</strong> ул. {addressData.street}, д. {addressData.house}
+                  <strong>Адрес:</strong> {addressData.street}, д.{" "}
+                  {addressData.house}
                   {addressData.apartment && `, кв. ${addressData.apartment}`}
                   {addressData.entrance && `, подъезд ${addressData.entrance}`}
                   {addressData.intercom === "yes" &&

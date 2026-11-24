@@ -13,7 +13,7 @@ import menuDataJson from "./data/menu.json";
 import type { MenuData } from "./types/menu";
 import "./styles/components.css";
 import "./styles/App.css";
-
+import { DeliveryZones } from "./components/DeliveryZones";
 
 function App() {
   const menuData = menuDataJson as MenuData;
@@ -26,6 +26,7 @@ function App() {
         <Hero />
         <Features />
         <Catalog />
+        <DeliveryZones />
         <CustomOrder />
         <Reviews />
         <CTA />

@@ -12,15 +12,17 @@ export interface Pie {
   category: string;
   name: string;
   image_url: string;
+  image_url_cream?: string;
+  image_url_sour_cream?: string;
   dough: string;
   ingredients: string[];
   price_per_kg: number;
   available_sizes: string[];
+  decore: string[];
   is_stop: boolean;
   stop_start: string | null;
   stop_end: string | null;
   stop_reason: string | null;
-  decore: string[];
 }
 
 export interface MenuData {

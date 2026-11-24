@@ -4,7 +4,7 @@
     "create_date": "2026-11-12",
     "update_date": "2026-11-19",
     "schema": "pies-catalog/v2",
-    "notes": "Справочник размеров вынесен отдельно; пироги ссылаются на доступные размеры через available_sizes. persons и diameter указаны диапазонами. stop_start/stop_end — ISO-даты (YYYY-MM-DD), null если стопа нет или дата не определена. image_url — ссылка на изображение (заглушка, замените на реальные). Добавлен справочник и поле decore для украшения пирогов."
+    "notes": "Справочник размеров вынесен отдельно; пироги ссылаются на доступные размеры через available_sizes. persons и diameter указаны диапазонами. stop_start/stop_end — ISO-даты (YYYY-MM-DD), null если стопа нет или дата не определена. image_url — ссылка на изображение (заглушка, замените на реальные). Добавлен справочник и поле decore для украшения пирогов. Для пирогов с decore добавлены image_url_cream и image_url_sour_cream."
   },
   "dictionaries": {
     "dough_types": {
@@ -17,8 +17,8 @@
       "hearty": "Сытные"
     },
     "decore": {
-      "cream": "сливки",
-      "sour_cream": "сметана"
+      "Сливки": "сливки",
+      "Сметана": "сметана"
     }
   },
   "sizes": {
@@ -78,15 +78,9 @@
       "name": "Пирог с сыром и картофелем",
       "image_url": "./pais/ossetian_cheese_potato.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "картофель",
-        "сыр",
-        "масло сливочное"
-      ],
+      "ingredients": ["картофель", "сыр", "масло сливочное"],
       "price_per_kg": 820,
-      "available_sizes": [
-        "0.8"
-      ],
+      "available_sizes": ["0.8"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -99,15 +93,9 @@
       "name": "Пирог с сыром и творогом",
       "image_url": "./pais/ossetian_cheese_tvorog.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "сыр",
-        "творог",
-        "масло сливочное"
-      ],
+      "ingredients": ["сыр", "творог", "масло сливочное"],
       "price_per_kg": 820,
-      "available_sizes": [
-        "0.8"
-      ],
+      "available_sizes": ["0.8"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -119,22 +107,13 @@
       "category": "sweet",
       "name": "Пирог с яблоком",
       "image_url": "./pais/sweet_apple.jpg",
+      "image_url_cream": "./pais/sweet_apple_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_apple_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "яблоко"
-      ],
+      "ingredients": ["яблоко"],
       "price_per_kg": 750,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -145,23 +124,13 @@
       "category": "sweet",
       "name": "Пирог с яблоком и брусникой",
       "image_url": "./pais/sweet_apple_cowberry.jpg",
+      "image_url_cream": "./pais/sweet_apple_cowberry_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_apple_cowberry_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "яблоко",
-        "брусника"
-      ],
+      "ingredients": ["яблоко", "брусника"],
       "price_per_kg": 860,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -172,21 +141,13 @@
       "category": "sweet",
       "name": "Пирог с вишней",
       "image_url": "./pais/sweet_cherry.jpg",
+      "image_url_cream": "./pais/sweet_cherry_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_cherry_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "вишня",
-        "сметана"
-      ],
+      "ingredients": ["вишня", "сметана"],
       "price_per_kg": 900,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -197,22 +158,13 @@
       "category": "sweet",
       "name": "Пирог с вишней и клубникой",
       "image_url": "./pais/sweet_cherry_strawberry.jpg",
+      "image_url_cream": "./pais/sweet_cherry_strawberry_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_cherry_strawberry_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "вишня",
-        "клубника",
-        "сметана"
-      ],
+      "ingredients": ["вишня", "клубника", "сметана"],
       "price_per_kg": 880,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -223,21 +175,13 @@
       "category": "sweet",
       "name": "Пирог с клубникой",
       "image_url": "./pais/sweet_strawberry.jpg",
+      "image_url_cream": "./pais/sweet_strawberry_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_strawberry_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "клубника",
-        "сметана"
-      ],
+      "ingredients": ["клубника", "сметана"],
       "price_per_kg": 850,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -248,21 +192,13 @@
       "category": "sweet",
       "name": "Пирог с брусникой",
       "image_url": "./pais/sweet_cowberry.jpg",
+      "image_url_cream": "./pais/sweet_cowberry_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_cowberry_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "брусника",
-        "сметана"
-      ],
+      "ingredients": ["брусника", "сметана"],
       "price_per_kg": 990,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -273,24 +209,13 @@
       "category": "sweet",
       "name": "Пирог «Венский»",
       "image_url": "./pais/sweet_vienna.jpg",
+      "image_url_cream": "./pais/sweet_vienna_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_vienna_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "яблоко",
-        "чернослив",
-        "грецкие орехи"
-      ],
+      "ingredients": ["яблоко", "чернослив", "грецкие орехи"],
       "price_per_kg": 850,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -301,23 +226,13 @@
       "category": "sweet",
       "name": "Пирог «Нежность»",
       "image_url": "./pais/sweet_tenderness.jpg",
+      "image_url_cream": "./pais/sweet_tenderness_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_tenderness_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "творог",
-        "ванилин"
-      ],
+      "ingredients": ["творог", "ванилин"],
       "price_per_kg": 850,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -328,21 +243,13 @@
       "category": "sweet",
       "name": "Пирог с чёрной смородиной",
       "image_url": "./pais/sweet_black_currant.jpg",
+      "image_url_cream": "./pais/sweet_black_currant_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_black_currant_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "чёрная смородина",
-        "сметана"
-      ],
+      "ingredients": ["чёрная смородина", "сметана"],
       "price_per_kg": 900,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -353,21 +260,13 @@
       "category": "sweet",
       "name": "Пирог с черникой",
       "image_url": "./pais/sweet_blueberry.jpg",
+      "image_url_cream": "./pais/sweet_blueberry_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_blueberry_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "черника",
-        "сметана"
-      ],
+      "ingredients": ["черника", "сметана"],
       "price_per_kg": 900,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": "2026-11-01",
       "stop_end": "2026-11-20",
@@ -378,22 +277,13 @@
       "category": "sweet",
       "name": "Пирог творожно-черничный",
       "image_url": "./pais/sweet_tvorog_blueberry.webp",
+      "image_url_cream": "./pais/sweet_tvorog_blueberry_cream.webp",
+      "image_url_sour_cream": "./pais/sweet_tvorog_blueberry_sour_cream.webp",
       "dough": "puff_sand",
-      "ingredients": [
-        "творог",
-        "черника",
-        "сметана"
-      ],
+      "ingredients": ["творог", "черника", "сметана"],
       "price_per_kg": 870,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -404,22 +294,13 @@
       "category": "sweet",
       "name": "Пирог творожный",
       "image_url": "./pais/sweet_tvorog.webp",
+      "image_url_cream": "./pais/sweet_tvorog_cream.webp",
+      "image_url_sour_cream": "./pais/sweet_tvorog_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "творог",
-        "ванилин",
-        "сметана"
-      ],
+      "ingredients": ["творог", "ванилин", "сметана"],
       "price_per_kg": 820,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": null,
       "stop_end": null,
@@ -430,21 +311,13 @@
       "category": "sweet",
       "name": "Пирог День и ночь",
       "image_url": "./pais/sweet_day_night.jpg",
+      "image_url_cream": "./pais/sweet_day_night_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_day_night_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "мак",
-        "творог"
-      ],
+      "ingredients": ["мак", "творог"],
       "price_per_kg": 860,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": "2026-10-15",
       "stop_end": "2026-11-30",
@@ -455,21 +328,13 @@
       "category": "sweet",
       "name": "Пирог Маковый",
       "image_url": "./pais/sweet_poppy.jpg",
+      "image_url_cream": "./pais/sweet_poppy_cream.jpg",
+      "image_url_sour_cream": "./pais/sweet_poppy_sour_cream.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "мак",
-        "творог"
-      ],
+      "ingredients": ["мак", "творог"],
       "price_per_kg": 890,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2"
-      ],
-      "decore": [
-        "cream",
-        "sour_cream"
-      ],
+      "available_sizes": ["1", "1.5", "2"],
+      "decore": ["Сливки", "Сметана"],
       "is_stop": false,
       "stop_start": "2026-10-15",
       "stop_end": "2026-11-30",
@@ -481,18 +346,9 @@
       "name": "Пирог с капустой",
       "image_url": "./pais/vegetable_cabbage.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "капуста",
-        "лук"
-      ],
+      "ingredients": ["капуста", "лук"],
       "price_per_kg": 580,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -505,18 +361,9 @@
       "name": "Пирог с капустой и яйцом",
       "image_url": "./pais/vegetable_cabbage_egg.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "капуста",
-        "яйцо"
-      ],
+      "ingredients": ["капуста", "яйцо"],
       "price_per_kg": 620,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -529,18 +376,9 @@
       "name": "Пирог с капустой и грибами",
       "image_url": "./pais/vegetable_cabbage_mushroom.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "капуста",
-        "грибы"
-      ],
+      "ingredients": ["капуста", "грибы"],
       "price_per_kg": 650,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": "2026-11-05",
@@ -553,19 +391,9 @@
       "name": "Пирог с картофелем",
       "image_url": "./pais/vegetable_potato.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "картофель",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["картофель", "лук", "зелень"],
       "price_per_kg": 560,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -578,18 +406,9 @@
       "name": "Пирог с сыром",
       "image_url": "./pais/hearty_cheese.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "сыр",
-        "зелень"
-      ],
+      "ingredients": ["сыр", "зелень"],
       "price_per_kg": 900,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -602,19 +421,9 @@
       "name": "Пирог с сыром и грибами",
       "image_url": "./pais/hearty_cheese_mushroom.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "сыр",
-        "грибы",
-        "зелень"
-      ],
+      "ingredients": ["сыр", "грибы", "зелень"],
       "price_per_kg": 950,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -627,20 +436,9 @@
       "name": "Пирог с курицей и картофелем",
       "image_url": "./pais/hearty_chicken_potato.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "курица",
-        "картофель",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["курица", "картофель", "лук", "зелень"],
       "price_per_kg": 890,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -653,19 +451,9 @@
       "name": "Пирог с курицей (чист)",
       "image_url": "./pais/hearty_chicken_pure.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "курица",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["курица", "лук", "зелень"],
       "price_per_kg": 1400,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -678,20 +466,9 @@
       "name": "Пирог со свининой и картофелем",
       "image_url": "./pais/hearty_pork_potato.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "свинина",
-        "картофель",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["свинина", "картофель", "лук", "зелень"],
       "price_per_kg": 890,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -704,20 +481,9 @@
       "name": "Пирог с говядиной и картофелем",
       "image_url": "./pais/hearty_beef_potato.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "говядина",
-        "картофель",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["говядина", "картофель", "лук", "зелень"],
       "price_per_kg": 950,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": "2026-11-10",
@@ -730,21 +496,9 @@
       "name": "Пирог «Жульен»",
       "image_url": "./pais/hearty_julienne.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "курица",
-        "сыр",
-        "грибы",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["курица", "сыр", "грибы", "лук", "зелень"],
       "price_per_kg": 1100,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -757,20 +511,9 @@
       "name": "Пирог с индейкой и картофелем",
       "image_url": "./pais/hearty_turkey_potato.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "филе индейки",
-        "картофель",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["филе индейки", "картофель", "лук", "зелень"],
       "price_per_kg": 960,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -783,21 +526,9 @@
       "name": "Пирог с индейкой и капустой с грибами",
       "image_url": "./pais/hearty_turkey_cabbage_mushroom.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "филе индейки",
-        "капуста",
-        "грибы",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["филе индейки", "капуста", "грибы", "лук", "зелень"],
       "price_per_kg": 930,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -810,20 +541,9 @@
       "name": "Пирог с тилапией и картофелем",
       "image_url": "./pais/hearty_tilapia_potato.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "тилапия",
-        "картофель",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["тилапия", "картофель", "лук", "зелень"],
       "price_per_kg": 850,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -836,21 +556,9 @@
       "name": "Пирог с индейкой и рисом с грибами",
       "image_url": "./pais/hearty_turkey_rice_mushroom.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "филе индейки",
-        "рис",
-        "грибы",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["филе индейки", "рис", "грибы", "лук", "зелень"],
       "price_per_kg": 930,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": null,
@@ -863,20 +571,9 @@
       "name": "Пирог с горбушей и картофелем",
       "image_url": "./pais/hearty_pink_salmon_potato.jpg",
       "dough": "puff_sand",
-      "ingredients": [
-        "горбуша",
-        "картофель",
-        "лук",
-        "зелень"
-      ],
+      "ingredients": ["горбуша", "картофель", "лук", "зелень"],
       "price_per_kg": 900,
-      "available_sizes": [
-        "1",
-        "1.5",
-        "2",
-        "2.5",
-        "3"
-      ],
+      "available_sizes": ["1", "1.5", "2", "2.5", "3"],
       "decore": [],
       "is_stop": false,
       "stop_start": "2026-11-08",
