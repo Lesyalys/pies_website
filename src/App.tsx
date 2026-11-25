@@ -1,25 +1,30 @@
-import { TopBar } from "./components/TopBar";
-import { Header } from "./components/Header";
-import { Hero } from "./components/Hero";
-import { Features } from "./components/Features";
-import { Catalog } from "./components/Catalog";
-import { CustomOrder } from "./components/CustomOrder";
-import { Reviews } from "./components/Reviews";
-import { CTA } from "./components/CTA";
-import { Footer } from "./components/Footer";
-import { CartDrawer } from "./components/CartDrawer";
-import { CartProvider } from "./context/CartContext";
+import { TopBar } from "./components/layout/TopBar";
+import { Header } from "./components/layout/Header";
+import { Hero } from "./components/hero/Hero";
+import { Features } from "./components/features/Features";
+import { Catalog } from "./components/catalog/Catalog";
+import { CustomOrder } from "./components/content/CustomOrder";
+import { Reviews } from "./components/content/Reviews";
+import { CTA } from "./components/content/CTA";
+import { Footer } from "./components/layout/Footer";
+import { CartDrawer } from "./components/cart/CartDrawer";
+import { CheckoutModal } from "./components/checkout/CheckoutModal";
+import { AddToCartBanner } from "./components/cart/AddToCartBanner";
+import { DeliveryZones } from "./components/delivery/DeliveryZones";
+import { CartProvider, useCart } from "./context/CartContext";
 import menuDataJson from "./data/menu.json";
 import type { MenuData } from "./types/menu";
 import "./styles/components.css";
 import "./styles/App.css";
-import { DeliveryZones } from "./components/DeliveryZones";
 
-function App() {
-  const menuData = menuDataJson as MenuData;
+const menuData = menuDataJson as MenuData;
+
+function AppContent() {
+  const { isCheckoutOpen, closeCheckout, lastAdded, clearLastAdded } =
+    useCart();
 
   return (
-    <CartProvider>
+    <>
       <TopBar />
       <Header />
       <main>
@@ -33,8 +38,20 @@ function App() {
       </main>
       <Footer />
 
-      {/* Рендерим корзину в самом конце */}
       <CartDrawer pies={menuData.pies} sizes={menuData.sizes} />
+      <CheckoutModal isOpen={isCheckoutOpen} onClose={closeCheckout} />
+
+      {lastAdded && (
+        <AddToCartBanner productName={lastAdded} onDone={clearLastAdded} />
+      )}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <CartProvider>
+      <AppContent />
     </CartProvider>
   );
 }

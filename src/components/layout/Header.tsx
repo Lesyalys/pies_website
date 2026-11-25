@@ -1,4 +1,4 @@
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 
 export const Header = () => {
   const { totalItems, totalPrice, openCart } = useCart();
@@ -25,8 +25,8 @@ export const Header = () => {
         <div className="header__right">
           <nav className="header__nav">
             <a href="#catalog">Каталог</a>
-            <a href="#about">О нас</a>
             <a href="#delivery">Доставка</a>
+            <a href="#about">О нас</a>
             <a href="#contacts">Контакты</a>
           </nav>
           {/* Открытие корзины ТОЛЬКО по клику */}

@@ -1,12 +1,10 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { streetZones } from "../config/streetZones";
+import { streetZones } from "../../config/streetZones";
+import type { StreetZone } from "../../types/address";
 
 interface Props {
   value: string;
-  onChange: (
-    street: string,
-    zone: { zone: string; price: number } | null,
-  ) => void;
+  onChange: (street: string, zone: StreetZone | null) => void;
 }
 
 export const StreetSelector = ({ value, onChange }: Props) => {
@@ -14,7 +12,6 @@ export const StreetSelector = ({ value, onChange }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Закрытие по клику вне компонента
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -28,7 +25,6 @@ export const StreetSelector = ({ value, onChange }: Props) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Фильтрация улиц по введённой подстроке
   const suggestions = useMemo(() => {
     if (!query.trim()) return Object.keys(streetZones).slice(0, 10);
     const q = query.toLowerCase().trim();
@@ -47,7 +43,6 @@ export const StreetSelector = ({ value, onChange }: Props) => {
     const val = e.target.value;
     setQuery(val);
     setIsOpen(true);
-    // Если поле очищено — сбрасываем зону
     if (!val) onChange("", null);
   };
 

@@ -4,9 +4,9 @@ export const SETTINGS = {
     delivery: { start: "09:00", end: "20:00" },
   },
   deadlineHour: 18,
-  pickupDiscount: 0.10,
+  pickupDiscount: 0.1,
   deliveryPrice: 150,
 
   // Активный ивент. Можно брать из env или CMS.
-  eventStyle: "default" | "christmas" | "newyear" | "halloween",
+  eventStyle: "default" as "default" | "christmas" | "newyear" | "halloween",
 };

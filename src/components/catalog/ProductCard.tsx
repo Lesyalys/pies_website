@@ -1,19 +1,17 @@
 import { useState, useMemo } from "react";
-import type { Pie, SizeInfo } from "../types/menu";
-import { useCart } from "../context/CartContext";
-import { Toast } from "./Toast";
+import type { Pie, SizeInfo } from "../../types/menu";
+import { useCart } from "../../context/CartContext";
 
 interface Props {
   pie: Pie;
   sizes: Record<string, SizeInfo>;
-  decoreTypes?: Record<string, string>;
 }
 
-export const ProductCard = ({ pie, sizes, decoreTypes }: Props) => {
+export const ProductCard = ({ pie, sizes }: Props) => {
   const [selectedSize, setSelectedSize] = useState(pie.available_sizes[0]);
-  const [decore, setDecore] = useState(pie.decore?.[0] || "");
+  const [decore, setDecore] = useState("");
   const [imageError, setImageError] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
   const { addToCart } = useCart();
 
   const isStopped = useMemo(() => {
@@ -26,23 +24,29 @@ export const ProductCard = ({ pie, sizes, decoreTypes }: Props) => {
   const currentSizeInfo = sizes[selectedSize];
   const currentPrice = Math.round(pie.price_per_kg * currentSizeInfo.kg);
 
-  const handleAddToCart = () => {
-    addToCart(pie, selectedSize, currentPrice, decore);
-    setShowToast(true);
+  const getImageUrl = () => {
+    if (decore === "Сливки" && pie.image_url_cream) return pie.image_url_cream;
+    if (decore === "Сметана" && pie.image_url_sour_cream)
+      return pie.image_url_sour_cream;
+    return pie.image_url;
   };
 
-  // Меняем картинку в зависимости от декора
-  const imageUrl =
-    decore === "cream"
-      ? pie.image_url_cream || pie.image_url
-      : decore === "sour_cream"
-        ? pie.image_url_sour_cream || pie.image_url
-        : pie.image_url;
+  const finalImage = getImageUrl();
 
-  const showImage = imageUrl && !imageError;
+  const handleAddToCart = () => {
+    addToCart(pie, selectedSize, currentPrice, decore);
+    setIsPressed(true);
+    setTimeout(() => setIsPressed(false), 300);
+  };
+
+  const showImage = finalImage && !imageError;
 
   return (
-    <div className={`product-card ${isStopped ? "product-card--stopped" : ""}`}>
+    <div
+      className={`product-card ${isStopped ? "product-card--stopped" : ""} ${
+        isPressed ? "product-card--pressed" : ""
+      }`}
+    >
       <div className="product-card__header">
         <div className="product-card__select-wrap">
           <select
@@ -57,16 +61,20 @@ export const ProductCard = ({ pie, sizes, decoreTypes }: Props) => {
               </option>
             ))}
           </select>
+
           {pie.decore && pie.decore.length > 0 && (
             <select
               className="product-card__select"
               value={decore}
-              onChange={(e) => setDecore(e.target.value)}
+              onChange={(e) => {
+                setDecore(e.target.value);
+                setImageError(false);
+              }}
             >
               <option value="">Без декора</option>
               {pie.decore.map((d) => (
                 <option key={d} value={d}>
-                  {decoreTypes?.[d] || d}
+                  {d}
                 </option>
               ))}
             </select>
@@ -90,7 +98,7 @@ export const ProductCard = ({ pie, sizes, decoreTypes }: Props) => {
 
         {showImage ? (
           <img
-            src={imageUrl}
+            src={finalImage}
             alt={pie.name}
             className="product-card__image"
             onError={() => setImageError(true)}
@@ -104,6 +112,8 @@ export const ProductCard = ({ pie, sizes, decoreTypes }: Props) => {
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
               <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z" />
@@ -137,12 +147,6 @@ export const ProductCard = ({ pie, sizes, decoreTypes }: Props) => {
           В корзину
         </button>
       </div>
-
-      <Toast
-        message={`«${pie.name}» добавлен в корзину`}
-        isVisible={showToast}
-        onClose={() => setShowToast(false)}
-      />
     </div>
   );
 };

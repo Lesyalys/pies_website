@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { ProductCard } from "./ProductCard";
-import type { Pie, SizeInfo, MenuData } from "../types/menu";
-import menuDataJson from "../data/menu.json";
+import type { Pie, SizeInfo, MenuData } from "../../types/menu";
+import menuDataJson from "../../data/menu.json";
 
 const menuData = menuDataJson as MenuData;
 const pies: Pie[] = menuData.pies;

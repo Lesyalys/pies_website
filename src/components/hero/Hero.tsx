@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import heroData from "../data/hero.json";
+import heroData from "../../data/hero.json";
 
 interface SlideData {
   id: number;

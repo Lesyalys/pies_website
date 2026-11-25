@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  type ReactNode,
+} from "react";
 import type { Pie } from "../types/menu";
 
 export interface CartItem {
@@ -8,17 +14,27 @@ export interface CartItem {
   weight: string;
   price: number;
   quantity: number;
+  decore?: string;
 }
 
 interface CartContextType {
   cart: CartItem[];
   isCartOpen: boolean;
+  isCheckoutOpen: boolean;
+  lastAdded: string | null;
+
   openCart: () => void;
   closeCart: () => void;
+  openCheckout: () => void;
+  closeCheckout: () => void;
+
   addToCart: (pie: Pie, weight: string, price: number, decore: string) => void;
   removeFromCart: (id: string, weight: string) => void;
   increaseQuantity: (id: string, weight: string) => void;
   decreaseQuantity: (id: string, weight: string) => void;
+  clearCart: () => void;
+  clearLastAdded: () => void;
+
   totalItems: number;
   totalPrice: number;
 }
@@ -28,18 +44,36 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [lastAdded, setLastAdded] = useState<string | null>(null);
 
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
+  const openCheckout = () => {
+    setIsCartOpen(false);
+    setIsCheckoutOpen(true);
+  };
+  const closeCheckout = () => setIsCheckoutOpen(false);
+  const clearLastAdded = () => setLastAdded(null);
 
-  const addToCart = (pie: Pie, weight: string, price: number) => {
+  const addToCart = (
+    pie: Pie,
+    weight: string,
+    price: number,
+    decore: string,
+  ) => {
     setCart((prev) => {
       const existing = prev.find(
-        (item) => item.id === pie.id && item.weight === weight,
+        (item) =>
+          item.id === pie.id &&
+          item.weight === weight &&
+          (item.decore || "") === (decore || ""),
       );
       if (existing) {
         return prev.map((item) =>
-          item.id === pie.id && item.weight === weight
+          item.id === pie.id &&
+          item.weight === weight &&
+          (item.decore || "") === (decore || "")
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         );
@@ -53,9 +87,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           weight,
           price,
           quantity: 1,
+          decore,
         },
       ];
     });
+    setLastAdded(pie.name);
   };
 
   const removeFromCart = (id: string, weight: string) => {
@@ -76,16 +112,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const decreaseQuantity = (id: string, weight: string) => {
     setCart((prev) =>
-      prev.map((item) => {
-        if (item.id === id && item.weight === weight) {
-          return item.quantity > 1
-            ? { ...item, quantity: item.quantity - 1 }
-            : item;
-        }
-        return item;
-      }),
+      prev.map((item) =>
+        item.id === id && item.weight === weight && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item,
+      ),
     );
   };
+
+  const clearCart = () => setCart([]);
 
   const totalItems = useMemo(
     () => cart.reduce((sum, item) => sum + item.quantity, 0),
@@ -101,12 +136,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       value={{
         cart,
         isCartOpen,
+        isCheckoutOpen,
+        lastAdded,
         openCart,
         closeCart,
+        openCheckout,
+        closeCheckout,
         addToCart,
         removeFromCart,
         increaseQuantity,
         decreaseQuantity,
+        clearCart,
+        clearLastAdded,
         totalItems,
         totalPrice,
       }}
@@ -117,7 +158,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within CartProvider");
-  return context;
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart must be used within CartProvider");
+  return ctx;
 };

@@ -1,8 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
-import { useCart } from "../context/CartContext";
-import { SETTINGS } from "../config/settings";
+import { useCart } from "../../context/CartContext";
+import { SETTINGS } from "../../config/settings";
 import { AddressInput } from "./AddressInput";
-import type { AddressData } from "./AddressInput";
+import type { AddressData } from "../../types/address";
 import {
   getAvailableDates,
   getDeliveryTimeIntervals,
@@ -11,15 +11,38 @@ import {
   validateDeliveryTime,
   canOrderToday,
   ORDER_CUTOFF_HOUR,
-} from "../utils/time";
+} from "../../utils/time";
+import { OrderSuccess } from "./OrderSuccess";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface OrderDetails {
+  items: {
+    id: string;
+    name: string;
+    image_url: string;
+    weight: string;
+    price: number;
+    quantity: number;
+    decore?: string;
+  }[];
+  totalPrice: number;
+  deliveryType: "delivery" | "pickup";
+  dateLabel: string;
+  time: string;
+  address?: string;
+  phone: string;
+  paymentMethod: "courier" | "online";
+  finalPrice: number;
+  deliveryPrice?: number;
+  pickupDiscount?: number;
+}
+
 export const CheckoutModal = ({ isOpen, onClose }: Props) => {
-  const { cart, totalPrice, closeCart } = useCart();
+  const { cart, totalPrice, clearCart, closeCart } = useCart();
 
   const availableDates = useMemo(() => getAvailableDates(), []);
   const isTodayAvailable = useMemo(() => canOrderToday(), []);
@@ -35,7 +58,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
   const [deliveryTime, setDeliveryTime] = useState("");
   const [pickupTime, setPickupTime] = useState("");
 
-  // ← добавлено zone: null
   const [addressData, setAddressData] = useState<AddressData>({
     street: "",
     house: "",
@@ -44,6 +66,8 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     intercom: "no",
     intercomCode: "",
     zone: null,
+    notes: "",
+    paymentMethod: "courier",
   });
 
   const [touched, setTouched] = useState({
@@ -51,6 +75,10 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     address: false,
     time: false,
   });
+
+  const [submittedOrder, setSubmittedOrder] = useState<OrderDetails | null>(
+    null,
+  );
 
   const deliveryIntervals = useMemo(
     () => getDeliveryTimeIntervals(selectedDate),
@@ -82,7 +110,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     setTouched((t) => ({ ...t, phone: true }));
   };
 
-  // ← безопасный доступ к zone?.price
   const deliveryCost =
     deliveryType === "delivery" && addressData.zone
       ? addressData.zone.price
@@ -92,6 +119,7 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     deliveryType === "pickup"
       ? Math.round(totalPrice * SETTINGS.pickupDiscount)
       : 0;
+
   const finalPrice = totalPrice + deliveryCost - pickupDiscount;
 
   const isPhoneValid = phone.replace(/\D/g, "").length === 11;
@@ -110,9 +138,60 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
 
   const isFormValid = isPhoneValid && isAddressValid && isTimeValid;
 
+  const handleSubmit = () => {
+    if (!isFormValid) return;
+
+    const dateLabel =
+      availableDates.find((d) => d.value === selectedDate)?.label || "";
+
+    const addressString =
+      deliveryType === "delivery"
+        ? `${addressData.street}, д. ${addressData.house}${
+            addressData.apartment ? `, кв. ${addressData.apartment}` : ""
+          }${addressData.entrance ? `, подъезд ${addressData.entrance}` : ""}${
+            addressData.notes ? ` (${addressData.notes})` : ""
+          }`
+        : undefined;
+
+    setSubmittedOrder({
+      items: cart.map((i) => ({
+        id: i.id,
+        name: i.name,
+        image_url: i.image_url,
+        weight: i.weight,
+        price: i.price,
+        quantity: i.quantity,
+        decore: i.decore,
+      })),
+      totalPrice,
+      deliveryType,
+      dateLabel,
+      time: deliveryType === "delivery" ? deliveryTime : pickupTime,
+      address: addressString,
+      phone,
+      paymentMethod: addressData.paymentMethod,
+      finalPrice,
+      deliveryPrice:
+        deliveryType === "delivery" ? addressData.zone?.price : undefined,
+      pickupDiscount: deliveryType === "pickup" ? pickupDiscount : undefined,
+    });
+
+    clearCart();
+  };
+
+  const handleFinalClose = () => {
+    setSubmittedOrder(null);
+    onClose();
+    closeCart();
+  };
+
+  if (submittedOrder) {
+    return <OrderSuccess order={submittedOrder} onClose={handleFinalClose} />;
+  }
+
   return (
     <div className="checkout-overlay">
-      <div className="checkout-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="checkout-modal">
         <button
           className="checkout-modal__close"
           onClick={onClose}
@@ -129,7 +208,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           </div>
         )}
 
-        {/* 1. Способ получения */}
         <div className="checkout-field">
           <label className="checkout-label">Способ получения</label>
           <div className="checkout-toggle">
@@ -150,7 +228,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           </div>
         </div>
 
-        {/* 2. Дата */}
         <div className="checkout-field">
           <label className="checkout-label">Дата получения</label>
           <div className="date-grid">
@@ -167,7 +244,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           </div>
         </div>
 
-        {/* 3. Время доставки */}
         {deliveryType === "delivery" && (
           <div className="checkout-field">
             <label className="checkout-label">Время доставки</label>
@@ -198,7 +274,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           </div>
         )}
 
-        {/* 4. Время самовывоза */}
         {deliveryType === "pickup" && (
           <div className="checkout-field">
             <label className="checkout-label">
@@ -231,7 +306,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           </div>
         )}
 
-        {/* 5. Телефон */}
         <div className="checkout-field">
           <label className="checkout-label">Контактный телефон</label>
           <input
@@ -249,7 +323,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           )}
         </div>
 
-        {/* 6. Адрес */}
         {deliveryType === "delivery" && (
           <div className="checkout-field">
             <label className="checkout-label">Адрес доставки</label>
@@ -262,16 +335,19 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           </div>
         )}
 
-        {/* 7. Итоговая сводка */}
         {cart.length > 0 && (
           <div className="checkout-final-card">
             <h3 className="checkout-final-card__title">Ваш заказ</h3>
 
             <div className="checkout-final-card__items">
               {cart.map((item) => (
-                <div key={`${item.id}-${item.weight}`} className="final-item">
+                <div
+                  key={`${item.id}-${item.weight}-${item.decore || ""}`}
+                  className="final-item"
+                >
                   <span>
-                    {item.name} ({item.weight} кг) × {item.quantity}
+                    {item.name} ({item.weight} кг
+                    {item.decore ? `, ${item.decore}` : ""}) × {item.quantity}
                   </span>
                   <span>{item.price * item.quantity} ₽</span>
                 </div>
@@ -319,9 +395,6 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
                   {addressData.house}
                   {addressData.apartment && `, кв. ${addressData.apartment}`}
                   {addressData.entrance && `, подъезд ${addressData.entrance}`}
-                  {addressData.intercom === "yes" &&
-                    addressData.intercomCode &&
-                    `, домофон ${addressData.intercomCode}`}
                 </p>
               )}
               {phone.replace(/\D/g, "").length > 5 && (
@@ -333,25 +406,11 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
           </div>
         )}
 
-        {/* 8. Кнопка */}
         <button
           type="button"
           className="btn btn-primary checkout-submit"
           disabled={!isFormValid}
-          onClick={() => {
-            if (!isFormValid) return;
-            console.log({
-              cart,
-              deliveryType,
-              selectedDate,
-              time: deliveryType === "delivery" ? deliveryTime : pickupTime,
-              address: addressData,
-              phone,
-              finalPrice,
-            });
-            onClose();
-            closeCart();
-          }}
+          onClick={handleSubmit}
         >
           {!isFormValid ? "Заполните все поля" : "Оформить заказ"}
         </button>
