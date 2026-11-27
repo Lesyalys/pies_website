@@ -5,7 +5,8 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
-import type { Pie } from "../types/menu";
+import type { GroupedPie, PieSize } from "../hooks/useMenu";
+import type { Decoration } from "../types/menu";
 
 export interface CartItem {
   id: string;
@@ -17,21 +18,31 @@ export interface CartItem {
   decore?: string;
 }
 
+interface LastAdded {
+  name: string;
+  id: number;
+}
+
 interface CartContextType {
   cart: CartItem[];
   isCartOpen: boolean;
   isCheckoutOpen: boolean;
-  lastAdded: string | null;
+  lastAdded: LastAdded | null;
 
   openCart: () => void;
   closeCart: () => void;
   openCheckout: () => void;
   closeCheckout: () => void;
 
-  addToCart: (pie: Pie, weight: string, price: number, decore: string) => void;
-  removeFromCart: (id: string, weight: string) => void;
-  increaseQuantity: (id: string, weight: string) => void;
-  decreaseQuantity: (id: string, weight: string) => void;
+  addToCart: (
+    pie: GroupedPie,
+    size: PieSize,
+    decor: Decoration | null,
+    price: number
+  ) => void;
+  removeFromCart: (id: string, weight: string, decore?: string) => void;
+  increaseQuantity: (id: string, weight: string, decore?: string) => void;
+  decreaseQuantity: (id: string, weight: string, decore?: string) => void;
   clearCart: () => void;
   clearLastAdded: () => void;
 
@@ -41,11 +52,21 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const matchItem = (
+  item: CartItem,
+  id: string,
+  weight: string,
+  decore?: string
+) =>
+  item.id === id &&
+  item.weight === weight &&
+  (item.decore || "") === (decore || "");
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [lastAdded, setLastAdded] = useState<string | null>(null);
+  const [lastAdded, setLastAdded] = useState<LastAdded | null>(null);
 
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
@@ -57,66 +78,71 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const clearLastAdded = () => setLastAdded(null);
 
   const addToCart = (
-    pie: Pie,
-    weight: string,
-    price: number,
-    decore: string,
+    pie: GroupedPie,
+    size: PieSize,
+    decor: Decoration | null,
+    price: number
   ) => {
+    const weight = String(size.KG);
+    const decoreName = decor?.name || "";
+    const imageUrl = decor?.image_url || pie.image_url || "";
+
     setCart((prev) => {
-      const existing = prev.find(
-        (item) =>
-          item.id === pie.id &&
-          item.weight === weight &&
-          (item.decore || "") === (decore || ""),
+      const existing = prev.find((item) =>
+        matchItem(item, pie.id, weight, decoreName)
       );
       if (existing) {
         return prev.map((item) =>
-          item.id === pie.id &&
-          item.weight === weight &&
-          (item.decore || "") === (decore || "")
+          matchItem(item, pie.id, weight, decoreName)
             ? { ...item, quantity: item.quantity + 1 }
-            : item,
+            : item
         );
       }
       return [
         ...prev,
         {
           id: pie.id,
-          name: pie.name,
-          image_url: pie.image_url,
+          name: pie.product_name,
+          image_url: imageUrl,
           weight,
           price,
           quantity: 1,
-          decore,
+          decore: decoreName,
         },
       ];
     });
-    setLastAdded(pie.name);
+
+    setLastAdded({ name: pie.product_name, id: Date.now() });
   };
 
-  const removeFromCart = (id: string, weight: string) => {
+  const removeFromCart = (id: string, weight: string, decore?: string) => {
     setCart((prev) =>
-      prev.filter((item) => !(item.id === id && item.weight === weight)),
+      prev.filter((item) => !matchItem(item, id, weight, decore))
     );
   };
 
-  const increaseQuantity = (id: string, weight: string) => {
+  const increaseQuantity = (id: string, weight: string, decore?: string) => {
     setCart((prev) =>
       prev.map((item) =>
-        item.id === id && item.weight === weight
+        matchItem(item, id, weight, decore)
           ? { ...item, quantity: item.quantity + 1 }
-          : item,
-      ),
+          : item
+      )
     );
   };
 
-  const decreaseQuantity = (id: string, weight: string) => {
+  const decreaseQuantity = (id: string, weight: string, decore?: string) => {
     setCart((prev) =>
-      prev.map((item) =>
-        item.id === id && item.weight === weight && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item,
-      ),
+      prev
+        .map((item) =>
+          matchItem(item, id, weight, decore) && item.quantity > 1
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter(
+          (item) =>
+            !(matchItem(item, id, weight, decore) && item.quantity === 0)
+        )
     );
   };
 
@@ -124,11 +150,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const totalItems = useMemo(
     () => cart.reduce((sum, item) => sum + item.quantity, 0),
-    [cart],
+    [cart]
   );
+
   const totalPrice = useMemo(
     () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    [cart],
+    [cart]
   );
 
   return (

@@ -12,16 +12,12 @@ import { CheckoutModal } from "./components/checkout/CheckoutModal";
 import { AddToCartBanner } from "./components/cart/AddToCartBanner";
 import { DeliveryZones } from "./components/delivery/DeliveryZones";
 import { CartProvider, useCart } from "./context/CartContext";
-import menuDataJson from "./data/menu.json";
-import type { MenuData } from "./types/menu";
+import { SetsSection } from "./components/sets/SetsSection";
 import "./styles/components.css";
 import "./styles/App.css";
 
-const menuData = menuDataJson as MenuData;
-
 function AppContent() {
-  const { isCheckoutOpen, closeCheckout, lastAdded, clearLastAdded } =
-    useCart();
+  const { isCheckoutOpen, closeCheckout, lastAdded, clearLastAdded } = useCart();
 
   return (
     <>
@@ -31,6 +27,7 @@ function AppContent() {
         <Hero />
         <Features />
         <Catalog />
+        <SetsSection />
         <DeliveryZones />
         <CustomOrder />
         <Reviews />
@@ -38,11 +35,15 @@ function AppContent() {
       </main>
       <Footer />
 
-      <CartDrawer pies={menuData.pies} sizes={menuData.sizes} />
+      <CartDrawer />
       <CheckoutModal isOpen={isCheckoutOpen} onClose={closeCheckout} />
 
       {lastAdded && (
-        <AddToCartBanner productName={lastAdded} onDone={clearLastAdded} />
+        <AddToCartBanner
+          productName={lastAdded.name}
+          uniqueId={lastAdded.id}
+          onDone={clearLastAdded}
+        />
       )}
     </>
   );

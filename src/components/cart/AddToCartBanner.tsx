@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   productName: string;
+  uniqueId: number;
   onDone: () => void;
 }
 
-export const AddToCartBanner = ({ productName, onDone }: Props) => {
+export const AddToCartBanner = ({ productName, uniqueId, onDone }: Props) => {
   const [visible, setVisible] = useState(true);
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
 
   useEffect(() => {
+    setVisible(true);
     const timer = setTimeout(() => {
       setVisible(false);
-      onDone();
-    }, 30000);
+      onDoneRef.current();
+    }, 2000);
     return () => clearTimeout(timer);
-  }, [onDone]);
+  }, [uniqueId]);
 
   if (!visible) return null;
 

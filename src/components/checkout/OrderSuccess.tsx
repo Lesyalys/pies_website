@@ -25,14 +25,13 @@ const AUTO_CLOSE_SECONDS = 5;
 export const OrderSuccess = ({ order, onClose }: Props) => {
   const [progress, setProgress] = useState(100);
 
-  // Автоматическое закрытие через 5 секунд
   useEffect(() => {
     const start = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - start;
       const remaining = Math.max(
         0,
-        100 - (elapsed / (AUTO_CLOSE_SECONDS * 1000)) * 100,
+        100 - (elapsed / (AUTO_CLOSE_SECONDS * 1000)) * 100
       );
       setProgress(remaining);
       if (remaining === 0) {
@@ -40,7 +39,6 @@ export const OrderSuccess = ({ order, onClose }: Props) => {
         onClose();
       }
     }, 50);
-
     return () => clearInterval(interval);
   }, [onClose]);
 
@@ -127,14 +125,10 @@ export const OrderSuccess = ({ order, onClose }: Props) => {
           )}
         </div>
 
-        <button
-          className="btn btn-primary order-success__close"
-          onClick={onClose}
-        >
+        <button className="btn btn-primary order-success__close" onClick={onClose}>
           Закрыть
         </button>
 
-        {/* Прогресс-бар автозакрытия */}
         <div className="order-success__progress">
           <div
             className="order-success__progress-bar"

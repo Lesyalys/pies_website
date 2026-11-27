@@ -1,12 +1,7 @@
 import { useCart } from "../../context/CartContext";
-import type { Pie, SizeInfo } from "../../types/menu";
+import { useMenu } from "../../hooks/useMenu";
 
-interface Props {
-  pies: Pie[];
-  sizes: Record<string, SizeInfo>;
-}
-
-export const CartDrawer = ({ pies, sizes }: Props) => {
+export const CartDrawer = () => {
   const {
     cart,
     isCartOpen,
@@ -20,11 +15,23 @@ export const CartDrawer = ({ pies, sizes }: Props) => {
     addToCart,
   } = useCart();
 
+  const { groupedPies } = useMenu();
+
   if (!isCartOpen) return null;
 
-  const recommendations = pies
-    ? pies.filter((pie) => !cart.some((item) => item.id === pie.id)).slice(0, 2)
-    : [];
+  const recommendations = groupedPies
+    .filter((pie) => !cart.some((item) => item.id === pie.id))
+    .slice(0, 2);
+
+  const handleRecommendationAdd = (pie: (typeof groupedPies)[number]) => {
+    const size = pie.sizes[0];
+    const decor =
+      size.decorations.find((d) => d.is_default) ||
+      size.decorations[0] ||
+      null;
+    const price = size.price + (decor?.price_delta || 0);
+    addToCart(pie, size, decor, price);
+  };
 
   return (
     <>
@@ -54,50 +61,63 @@ export const CartDrawer = ({ pies, sizes }: Props) => {
             </div>
           ) : (
             <div className="cart-drawer__items">
-              {cart.map((item) => (
-                <div
-                  key={`${item.id}-${item.weight}-${item.decore || ""}`}
-                  className="cart-item"
-                >
-                  <img
-                    src={item.image_url}
-                    alt={item.name}
-                    className="cart-item__image"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = "/placeholder.svg";
-                    }}
-                  />
-                  <div className="cart-item__info">
-                    <div className="cart-item__title">{item.name}</div>
-                    <div className="cart-item__weight">
-                      Вес: {item.weight} кг
-                      {item.decore && ` · ${item.decore}`}
+              {cart.map((item) => {
+                const key = `${item.id}-${item.weight}-${item.decore || ""}`;
+                return (
+                  <div key={key} className="cart-item">
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="cart-item__image"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/placeholder.svg";
+                        }}
+                      />
+                    ) : (
+                      <div className="cart-item__image cart-item__image--empty" />
+                    )}
+                    <div className="cart-item__info">
+                      <div className="cart-item__title">{item.name}</div>
+                      <div className="cart-item__weight">
+                        Вес: {item.weight} кг
+                        {item.decore && ` · ${item.decore}`}
+                      </div>
+                      <div className="cart-item__price">
+                        {item.price} ₽ × {item.quantity} ={" "}
+                        {item.price * item.quantity} ₽
+                      </div>
                     </div>
-                    <div className="cart-item__price">{item.price} ₽</div>
-                  </div>
-                  <div className="cart-item__controls">
-                    <div className="cart-item__quantity">
+                    <div className="cart-item__controls">
+                      <div className="cart-item__quantity">
+                        <button
+                          onClick={() =>
+                            decreaseQuantity(item.id, item.weight, item.decore)
+                          }
+                        >
+                          −
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          onClick={() =>
+                            increaseQuantity(item.id, item.weight, item.decore)
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
                       <button
-                        onClick={() => decreaseQuantity(item.id, item.weight)}
+                        className="cart-item__remove"
+                        onClick={() =>
+                          removeFromCart(item.id, item.weight, item.decore)
+                        }
                       >
-                        −
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button
-                        onClick={() => increaseQuantity(item.id, item.weight)}
-                      >
-                        +
+                        Удалить
                       </button>
                     </div>
-                    <button
-                      className="cart-item__remove"
-                      onClick={() => removeFromCart(item.id, item.weight)}
-                    >
-                      Удалить
-                    </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -107,23 +127,33 @@ export const CartDrawer = ({ pies, sizes }: Props) => {
             <h3 className="cart-drawer__reco-title">Рекомендуем добавить</h3>
             <div className="cart-reco-list">
               {recommendations.map((pie) => {
-                const sizeKey = pie.available_sizes[0];
-                const sizeInfo = sizes[sizeKey];
-                const price = Math.round(pie.price_per_kg * sizeInfo.kg);
+                const size = pie.sizes[0];
+                const decor =
+                  size.decorations.find((d) => d.is_default) ||
+                  size.decorations[0] ||
+                  null;
+                const price = size.price + (decor?.price_delta || 0);
                 return (
                   <div key={pie.id} className="cart-reco-item">
-                    <img
-                      src={pie.image_url}
-                      alt={pie.name}
-                      className="cart-reco-item__image"
-                    />
+                    {decor?.image_url ? (
+                      <img
+                        src={decor.image_url}
+                        alt={pie.product_name}
+                        className="cart-reco-item__image"
+                      />
+                    ) : (
+                      <div className="cart-reco-item__image cart-item__image--empty" />
+                    )}
                     <div className="cart-reco-item__info">
-                      <div className="cart-reco-item__name">{pie.name}</div>
+                      <div className="cart-reco-item__name">
+                        {pie.product_name}
+                      </div>
                       <div className="cart-reco-item__price">{price} ₽</div>
                     </div>
                     <button
                       className="cart-reco-item__btn"
-                      onClick={() => addToCart(pie, sizeKey, price, "")}
+                      onClick={() => handleRecommendationAdd(pie)}
+                      aria-label="Добавить в корзину"
                     >
                       +
                     </button>

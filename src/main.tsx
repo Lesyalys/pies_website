@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import "./styles/events.css"; //
 import { SETTINGS } from "./config/settings";
 
 const eventClass =

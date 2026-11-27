@@ -1,37 +1,61 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ProductCard } from "./ProductCard";
-import type { Pie, SizeInfo, MenuData } from "../../types/menu";
-import menuDataJson from "../../data/menu.json";
+import { useMenu } from "../../hooks/useMenu";
 
-const menuData = menuDataJson as MenuData;
-const pies: Pie[] = menuData.pies;
-const sizes: Record<string, SizeInfo> = menuData.sizes;
-const categories = menuData.dictionaries.categories;
+const CATEGORY_ORDER = ["Осетинские", "Сладкие", "Овощные", "Сытные"];
 
 export const Catalog = () => {
-  const [activeFilter, setActiveFilter] = useState("all");
+  const { groupedPies, loading, error } = useMenu();
+  const [activeFilter, setActiveFilter] = useState<string>("all");
 
-  // Группируем данные для отображения
-  const groupedPies = useMemo(() => {
-    if (activeFilter !== "all") {
-      return [
-        {
-          key: activeFilter,
-          title: categories[activeFilter] || activeFilter,
-          items: pies.filter((pie) => pie.category === activeFilter),
-        },
-      ];
+  // Категории, которые реально есть в данных — сохраняем порядок CATEGORY_ORDER,
+  // а те, что не попали в список, добавляем в конец.
+  const availableCategories = useMemo(() => {
+    const present = new Set(groupedPies.map((p) => p.category));
+    const ordered = CATEGORY_ORDER.filter((c) => present.has(c));
+    const extras = Array.from(present).filter((c) => !CATEGORY_ORDER.includes(c));
+    return [...ordered, ...extras];
+  }, [groupedPies]);
+
+  // Что рендерить
+  const groups = useMemo(() => {
+    if (activeFilter === "all") {
+      return availableCategories
+        .map((cat) => ({
+          key: cat,
+          label: cat,
+          items: groupedPies.filter((p) => p.category === cat),
+        }))
+        .filter((g) => g.items.length > 0);
     }
+    return [
+      {
+        key: activeFilter,
+        label: activeFilter,
+        items: groupedPies.filter((p) => p.category === activeFilter),
+      },
+    ].filter((g) => g.items.length > 0);
+  }, [groupedPies, activeFilter, availableCategories]);
 
-    // Если "Все", то создаем массив групп по порядку словаря категорий
-    return Object.entries(categories)
-      .map(([key, label]) => ({
-        key,
-        title: label,
-        items: pies.filter((pie) => pie.category === key),
-      }))
-      .filter((group) => group.items.length > 0); // Скрываем пустые группы
-  }, [activeFilter]);
+  if (loading) {
+    return (
+      <section className="catalog">
+        <div className="container">
+          <div className="catalog__loading">Загружаем меню…</div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="catalog">
+        <div className="container">
+          <div className="catalog__error">Не удалось загрузить меню: {error}</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="catalog" className="catalog">
@@ -54,29 +78,27 @@ export const Catalog = () => {
           >
             Все пироги
           </button>
-          {Object.entries(categories).map(([key, label]) => (
+          {availableCategories.map((cat) => (
             <button
-              key={key}
-              onClick={() => setActiveFilter(key)}
-              className={`btn ${activeFilter === key ? "btn-primary" : "btn-outline"}`}
+              key={cat}
+              onClick={() => setActiveFilter(cat)}
+              className={`btn ${activeFilter === cat ? "btn-primary" : "btn-outline"}`}
               style={{ padding: "10px 24px", fontSize: "14px" }}
             >
-              {label}
+              {cat}
             </button>
           ))}
         </div>
 
-        {/* Рендерим группы */}
         <div className="catalog__groups">
-          {groupedPies.map((group) => (
+          {groups.map((group) => (
             <div key={group.key} className="catalog__group">
-              {/* Заголовок группы (появляется только если мы показываем несколько групп) */}
               {activeFilter === "all" && (
-                <h3 className="catalog__group-title">{group.title}</h3>
+                <h3 className="catalog__group-title">{group.label}</h3>
               )}
               <div className="catalog__grid">
                 {group.items.map((pie) => (
-                  <ProductCard key={pie.id} pie={pie} sizes={sizes} />
+                  <ProductCard key={pie.id} pie={pie} />
                 ))}
               </div>
             </div>

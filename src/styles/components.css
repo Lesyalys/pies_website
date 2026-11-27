@@ -195,12 +195,10 @@
 .hero-new__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.65) 0%,
-    rgba(0, 0, 0, 0.2) 60%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.2) 60%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
 .hero-new__inner {
@@ -404,11 +402,9 @@
   }
 
   .hero-new__overlay {
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.8) 0%,
-      rgba(0, 0, 0, 0.2) 100%
-    );
+    background: linear-gradient(0deg,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.2) 100%);
   }
 
   .hero-new__inner {
@@ -1868,10 +1864,13 @@
   opacity: 0.5;
   cursor: not-allowed;
   background-color: var(--color-text-muted);
-} /* Автодополнение улиц */
+}
+
+/* Автодополнение улиц */
 .street-selector {
   position: relative;
-  grid-column: 1 / -1; /* На всю ширину в сетке address-fields */
+  grid-column: 1 / -1;
+  /* На всю ширину в сетке address-fields */
 }
 
 .street-selector__list {
@@ -1928,6 +1927,7 @@
 .address-zone-status--error {
   color: #ef4444;
 }
+
 /* ==========================================
    ADDRESS INPUT: Примечания и способ оплаты
    ========================================== */
@@ -1986,6 +1986,7 @@
 .address-zone-status--error {
   color: #ef4444;
 }
+
 /* ==========================================
    TOAST
    ========================================== */
@@ -2023,11 +2024,13 @@
     opacity: 0;
     transform: translateY(20px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
+
 .checkout-overlay {
   position: fixed;
   inset: 0;
@@ -2038,6 +2041,7 @@
   justify-content: center;
   padding: 16px;
 }
+
 /* ==========================================
    DELIVERY ZONES
    ========================================== */
@@ -2083,7 +2087,7 @@
 
 /* Важно: Leaflet/Яндекс-карта иногда наследует глобальные стили — ограничиваем */
 .yandex-map iframe,
-.yandex-map > div {
+.yandex-map>div {
   border-radius: 16px;
   border: none !important;
 }
@@ -2161,6 +2165,7 @@
   .delivery-zones__content {
     grid-template-columns: 1fr;
   }
+
   .delivery-zones__map {
     min-height: 400px;
   }
@@ -2170,18 +2175,22 @@
   .delivery-zones {
     padding: 60px 0;
   }
+
   .delivery-zones__header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
+
   .delivery-zones__title {
     font-size: 36px;
   }
+
   .delivery-zones__info {
     padding: 24px;
   }
 }
+
 /* ==========================================
    ORDER SUCCESS (Спасибо за заказ)
    ========================================== */
@@ -2219,6 +2228,7 @@
     opacity: 0;
     transform: scale(0.92);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
@@ -2358,6 +2368,7 @@
   background-color: var(--color-primary);
   transition: width 0.05s linear;
 }
+
 /* Фиксированный крестик в модалке */
 .checkout-modal__close {
   position: sticky;
@@ -2378,6 +2389,7 @@
   cursor: pointer;
   border: none;
 }
+
 .checkout-modal__close:hover {
   color: var(--color-primary);
   background-color: #f4ebe1;
@@ -2411,6 +2423,7 @@
   z-index: 150;
   animation: bannerDrop 0.35s ease-out;
 }
+
 .add-banner__icon {
   background: #10b981;
   color: white;
@@ -2423,13 +2436,294 @@
   font-size: 12px;
   font-weight: 700;
 }
+
 @keyframes bannerDrop {
   0% {
     opacity: 0;
     transform: translateX(-50%) translateY(-20px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+}
+
+.catalog__loading,
+.catalog__error {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--color-text-muted);
+}
+
+.catalog__error {
+  color: #c0392b;
+}
+
+/* ==========================================
+   SETS SECTION
+   ========================================== */
+.sets {
+  padding: 80px 0;
+  background-color: #f4ebe1;
+}
+
+.sets__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.sets__title {
+  font-family: var(--font-heading);
+  font-size: 56px;
+  letter-spacing: -1px;
+}
+
+.sets__desc {
+  max-width: 400px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.sets__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.set-card {
+  background-color: var(--color-bg-main);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.set-card--builder {
+  border-style: dashed;
+  justify-content: space-between;
+}
+
+.set-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.set-card__title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+}
+
+.set-card__discount {
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background-color: #10b981;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.set-card__desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.set-card__items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.set-card__item {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-main);
+}
+
+.set-card__item span:last-child {
+  color: var(--color-text-muted);
+}
+
+.set-card__footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+  gap: 12px;
+}
+
+.set-card__old-price {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  margin-right: 8px;
+}
+
+.set-card__price {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* ==========================================
+   SET BUILDER MODAL
+   ========================================== */
+.set-builder-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.set-builder {
+  position: relative;
+  background-color: var(--color-bg-main);
+  border-radius: 16px;
+  padding: 32px 24px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.set-builder__close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--color-text-muted);
+}
+
+.set-builder__title {
+  font-family: var(--font-heading);
+  font-size: 26px;
+}
+
+.set-builder__subtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.set-builder__progress {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.set-builder__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.set-builder__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background-color: var(--color-white);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.set-builder__item.active {
+  border-color: var(--color-primary);
+  background-color: rgba(107, 29, 42, 0.06);
+}
+
+.set-builder__item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.set-builder__item-price {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.set-builder__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+  gap: 16px;
+}
+
+.set-builder__total {
+  font-size: 15px;
+}
+
+.set-builder__total strong {
+  font-size: 20px;
+  color: var(--color-primary);
+  margin-left: 8px;
+}
+
+/* Адаптив */
+@media (max-width: 1024px) {
+  .sets__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sets__title {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sets {
+    padding: 56px 0;
+  }
+
+  .sets__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sets__title {
+    font-size: 30px;
+  }
+
+  .set-card {
+    padding: 20px;
+  }
+
+  .set-builder {
+    padding: 24px 16px;
   }
 }

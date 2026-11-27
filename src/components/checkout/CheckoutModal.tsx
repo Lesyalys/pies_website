@@ -48,10 +48,10 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
   const isTodayAvailable = useMemo(() => canOrderToday(), []);
 
   const [deliveryType, setDeliveryType] = useState<"delivery" | "pickup">(
-    "delivery",
+    "delivery"
   );
   const [selectedDate, setSelectedDate] = useState(
-    availableDates[0]?.value || "",
+    availableDates[0]?.value || ""
   );
 
   const [phone, setPhone] = useState("+7 ");
@@ -77,17 +77,16 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
   });
 
   const [submittedOrder, setSubmittedOrder] = useState<OrderDetails | null>(
-    null,
+    null
   );
 
   const deliveryIntervals = useMemo(
     () => getDeliveryTimeIntervals(selectedDate),
-    [selectedDate],
+    [selectedDate]
   );
-
   const pickupIntervals = useMemo(
     () => getPickupTimeIntervals(selectedDate),
-    [selectedDate],
+    [selectedDate]
   );
 
   useEffect(() => {
@@ -114,28 +113,23 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
     deliveryType === "delivery" && addressData.zone
       ? addressData.zone.price
       : 0;
-
   const pickupDiscount =
     deliveryType === "pickup"
       ? Math.round(totalPrice * SETTINGS.pickupDiscount)
       : 0;
-
   const finalPrice = totalPrice + deliveryCost - pickupDiscount;
 
   const isPhoneValid = phone.replace(/\D/g, "").length === 11;
-
   const isAddressValid =
     deliveryType === "delivery"
       ? !!addressData.street.trim() &&
-        !!addressData.house.trim() &&
-        !!addressData.zone
+      !!addressData.house.trim() &&
+      !!addressData.zone
       : true;
-
   const isTimeValid =
     deliveryType === "delivery"
       ? validateDeliveryTime(deliveryTime, selectedDate)
       : validatePickupTime(pickupTime, selectedDate);
-
   const isFormValid = isPhoneValid && isAddressValid && isTimeValid;
 
   const handleSubmit = () => {
@@ -143,14 +137,11 @@ export const CheckoutModal = ({ isOpen, onClose }: Props) => {
 
     const dateLabel =
       availableDates.find((d) => d.value === selectedDate)?.label || "";
-
     const addressString =
       deliveryType === "delivery"
-        ? `${addressData.street}, д. ${addressData.house}${
-            addressData.apartment ? `, кв. ${addressData.apartment}` : ""
-          }${addressData.entrance ? `, подъезд ${addressData.entrance}` : ""}${
-            addressData.notes ? ` (${addressData.notes})` : ""
-          }`
+        ? `${addressData.street}, д. ${addressData.house}${addressData.apartment ? `, кв. ${addressData.apartment}` : ""
+        }${addressData.entrance ? `, подъезд ${addressData.entrance}` : ""}${addressData.notes ? ` (${addressData.notes})` : ""
+        }`
         : undefined;
 
     setSubmittedOrder({
